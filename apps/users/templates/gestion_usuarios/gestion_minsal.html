@@ -1,0 +1,438 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block main_container %}
+<script>
+       $(document).ready(function() {
+            $("#Registrar").click(function(){
+
+                var nombre = $("#nombre").val();
+                var apellido = $("#apellido").val();
+                var usuario = $("#usuario").val();
+                var email = $("#correo").val();
+                var contraseña = $("#password").val();
+                var contraseña2 = $("#password-2").val();
+                var telefono = $("#telefono").val();
+                var direccion = $("#direccion").val();
+                var letra, correo, numero;
+
+                 letra=/^[a-zA-ZáÁéÉíÍóÓúÚñÑüÜ\s]+$/;
+                 correo = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                 numero = /^([0-9])*$/;
+
+                if(nombre === "" || apellido === "" || usuario === "" || email === "" || contraseña2 === "" || contraseña2 === "" || telefono === "" || direccion === ""  ){
+
+                	alert("Todos los campos son obligatorios");
+
+                	return false;
+              	    }if( !(contraseña === contraseña2) ){
+                		alert("Las contraseñas son diferentes");
+                		return false;
+                	}if( contraseña.length < 8){
+                		alert("Contraseña demasiado corta");
+                		return false;
+                	}
+                	if(!letra.test(nombre)){
+                		alert("El nombre es incorrecto");
+                		return false;
+                		
+                	}else if(nombre.length > 30){
+                		alert("El nombre es demasiado largo");
+                		return false;
+                	}
+             		
+             		if(!letra.test(apellido)){
+             			alert("El apellido es incorrecto");
+             			return false;
+             		}else if(apellido.length > 30){
+                		alert("El apellido es demasiado largo");
+                		return false;
+                	}
+                	if(usuario.length > 15){
+                		alert("El nombre de usuario es demasiado largo");
+                		return false;
+                	}
+                	
+                	if(!correo.test(email)){
+                		alert("El correo ingresado es incorrecto");
+                		return false;
+                	}
+                	
+					if(!numero.test(telefono) || telefono.length > 9){
+						alert("El numero de telefono es incorrecto");
+						return false;
+					}
+					if(direccion.length > 30){
+						alert("La direccion es demasiado larga");
+						return false;
+
+					}
+
+				});
+        	});
+</script>    
+<script>
+       $(document).ready(function() {
+            $("#Editar").click(function(){
+            	var id = $("#id-edit").val();
+                var nombre = $("#nombre-edit").val();
+                var apellido = $("#apellido-edit").val();
+                var usuario = $("#usuario-edit").val();
+                var email = $("#correo-edit").val();
+                var telefono = $("#telefono-edit").val();
+                var direccion = $("#direccion-edit").val();
+                var letra, correo, numero;
+
+                 letra=/^[a-zA-ZáÁéÉíÍóÓúÚñÑüÜ\s]+$/;
+                 correo = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                 numero = /^([0-9])*$/;
+
+                if(id === "" || nombre === "" || apellido === "" || usuario === "" || email === "" || telefono === "" || direccion === ""  ){
+
+                	alert("Todos los campos son obligatorios");
+
+                	return false;
+              	    }
+                	if(!letra.test(nombre)){
+                		alert("El nombre es incorrecto");
+                		return false;
+                		
+                	}else if(nombre.length > 30){
+                		alert("El nombre es demasiado largo");
+                		return false;
+                	}
+             		
+             		if(!letra.test(apellido)){
+             			alert("El apellido es incorrecto");
+             			return false;
+             		}else if(apellido.length > 30){
+                		alert("El apellido es demasiado largo");
+                		return false;
+                	}
+                	if(usuario.length > 15){
+                		alert("El nombre de usuario es demasiado largo");
+                		return false;
+                	}
+                	
+                	if(!correo.test(email)){
+                		alert("El correo ingresado es incorrecto");
+                		return false;
+                	}
+                	
+					if(!numero.test(telefono) || telefono.length > 9 || telefono.length < ){
+						alert("El numero de telefono es incorrecto");
+						return false;
+					}
+					if(direccion.length > 50){
+						alert("La direccion es demasiado larga");
+						return false;
+
+					}
+
+				});
+        	});
+</script>
+
+<div class="col-md-11 py-3 px-4 main-container">
+	{% csrf_token %}
+	<h4>Administraci&oacute;n de supervisores de MINSAL</h4>
+
+	<p class="lead">Estos son los supervisores de MINSAL registrados con nosotros.</p>
+
+	<div class="row text-center">
+		<div class="col-md-10"></div>
+		<button class="btn btn-info col-md-2" data-toggle="modal" data-target="#agregar-minsal-modal">Agregar Laboratoristas<i class="fas fa-plus-circle"></i></button>
+	</div>
+
+	<div class="row mt-4 justify-content-md-center">
+
+		<table class="table table-hover col-12">
+			<thead>
+				<tr class="d-flex bg-primary text-white text-center">
+					<th class="col-1">N°</th>
+					<th class="col-3">Nombre</th>
+					<th class="col-1">DUI</th>
+					<th class="col-2">Correo</th>
+					<th class="col-5">Opciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for minsal in minsal %}
+				<tr class="d-flex text-center">
+					<td class="col-1 font-weight-bold">{{ forloop.counter }}</td>
+					<td class="col-3 font-weight-bold">{{minsal.user.first_name}} {{minsal.user.last_name}}</td>
+					<td class="col-1">{{minsal.user.dui}}</td>
+					<td class="col-2">{{minsal.user.email}}</td>
+					<td class="col-5">
+
+
+						<button class="btn btn-success" title="Editar Información del Laboratorista"
+							data-toggle="modal" data-target="#editar-minsal-modal"
+							data-id="{{minsal.id}}"
+							data-nombre="{{minsal.user.first_name}}"
+							data-apellido="{{minsal.user.last_name}}"
+							data-usuario="{{minsal.user.username}}"
+							data-correo="{{minsal.user.email}}"
+							data-telefono="{{minsal.user.dui}}"
+							data-direccion="{{minsal.user.direccion}}"
+						>
+						Editar&nbsp;&nbsp;<i class="fas fa-pen"></i>
+						</button>
+
+						<button class="btn btn-danger" title="Eliminar el T&eacute;cnico"
+							data-toggle="modal" data-target="#eliminar-minsal-modal" data-id="{{minsal.id}}"
+							data-nombre="{{minsal.user.first_name}}"
+							data-apellido="{{minsal.user.last_name}}"
+							data-user="{{minsal.user.id}}"
+						>
+							Eliminar&nbsp;&nbsp;<i class="far fa-trash-alt"></i>
+						</button>
+					</td>
+				</tr>
+				{% empty %}
+				<tr>
+					<td colspan="6">
+						<h4>Aún no registras supervisores MINSAL.</h4>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- Modal mensaje de error -->
+{% if messages %}
+<div class="modal fade" id="mostrarmodal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3>Error al guardar el t&eacute;</h3>
+			</div>
+			{% for message in messages %}
+			<div class="modal-body">
+				<h4 {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</h4>
+			</div>
+			{% endfor %}
+			<div class="modal-footer">
+				<a href="#" data-dismiss="modal" class="btn btn-danger">Cerrar</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+<!-- Modal Agregar laboratoristas -->
+<div class="modal fade" id="agregar-minsal-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+
+	<div class="modal-content">
+	<form action="{% url 'registrar_minsal' %}" method="POST">
+
+		<div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Agregar nuevo supervisor</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+		<div class="modal-body">
+			<div class="form-group row">
+				<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="nombre" name="nombre" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="apellido" class="col-sm-2 col-form-label">Apellido</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="apellido" name="apellido" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="usuario" class="col-sm-2 col-form-label">Usuario</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="usuario" name="usuario" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="correo" class="col-sm-2 col-form-label">Correo</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="correo" name="correo" placeholder="email@example.com">
+				</div>
+			</div>
+			
+			<div class="form-group row">
+				<label for="password" class="col-sm-2 col-form-label">Contraseña</label>
+				<div class="col-sm-10">
+					<input type="password" class="form-control" id="password" name="password" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row align-items-center">
+				<label for="password-2" class="col-sm-2 col-form-label">Confirmar Contraseña</label>
+				<div class="col-sm-10">
+					<input type="password" class="form-control" id="password-2" name="password-2" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="telefono" class="col-sm-2 col-form-label">DUI</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="telefono" name="telefono" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="direccion" class="col-sm-2 col-form-label">Dirección</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="direccion" name="direccion" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row justify-content-md-center">
+				
+			</div>
+		</div>
+		
+		<div class="modal-footer">
+			{% csrf_token %}
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			<button type="submit" class="btn btn-primary col-sm-4 col-form-label" id="Registrar">Registrar</button>
+		</div>
+
+	</form>
+	</div>
+
+</div>
+</div>
+
+<!-- Modal Editar MINSAL -->
+<div class="modal fade" id="editar-minsal-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+		
+	<div class="modal-content">
+	<form action="{% url 'editar_minsal' %}" method="POST">
+			
+		<div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Editar Cliente.</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+		<div class="modal-body">
+			<div class="form-group row d-none">
+				<label for="id-edit" class="col-sm-2 col-form-label">ID de Cliente</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="id-edit" name="id_edit" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="nombre-edit" class="col-sm-2 col-form-label">Nombre</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="nombre-edit" name="nombre_edit" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="apellido-edit" class="col-sm-2 col-form-label">Apellido</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="apellido-edit" name="apellido_edit"
+						placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="usuario-edit" class="col-sm-2 col-form-label">Usuario</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="usuario-edit" name="usuario_edit" placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="correo-edit" class="col-sm-2 col-form-label">Correo</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="correo-edit" name="correo_edit"
+						placeholder="email@example.com">
+				</div>
+			</div>
+			
+			<div class="form-group row">
+				<label for="telefono-edit" class="col-sm-2 col-form-label">Telefono</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="telefono-edit" name="telefono_edit"
+						placeholder="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="direccion-edit" class="col-sm-2 col-form-label">Dirección</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="direccion-edit" name="direccion_edit"
+						placeholder="">
+				</div>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			{% csrf_token %}
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			<input type="submit" class="btn btn-success" value="Editar" id="Editar">
+		</div>
+
+	</form>
+	</div>
+
+</div>
+</div>
+
+<!-- Modal Eliminar laboratoristas -->
+<div class="modal fade" id="eliminar-minsal-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form action="{% url 'eliminar_minsal' %}" method="POST">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Eliminar T&eacute;cnico.</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					{% csrf_token %}
+					<div class="form-group row d-none">
+						<label for="id-delete" class="col-sm-2 col-form-label">ID de T&eacute;cnico</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="id-delete" name="id_delete" placeholder="">
+						</div>
+						<label for="user-delete" class="col-sm-2 col-form-label">ID de Usuario</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="user-delete" name="user_delete" placeholder="">
+						</div>
+					</div>
+					<div class="form-group row justify-content-md-center">
+						<h4>¿Estás seguro que quieres eliminar el T&eacute;cnico?</h4>
+							<label for="nombre-delete" class="col-sm-2 col-form-label">Nombre</label>
+							<div class="col-sm-3">
+								<input type="text" readonly="" class="form-control-plaintext" id="nombre-delete"
+									name="nombre_delete" placeholder="">
+							</div>
+							<label for="apellido-delete" class="col-sm-2 col-form-label">Apellido</label>
+							<div class="col-sm-3">
+								<input type="text" readonly="" class="form-control-plaintext" id="apellido-delete"
+									name="apellido_delete" placeholder="">
+							</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+					<input type="submit" class="btn btn-danger" value="Eliminar">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		$("#mostrarmodal").modal("show");
+	});
+</script>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static '/js/minsal.js' %}"></script>
+{% endblock %}
