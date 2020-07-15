@@ -174,20 +174,24 @@
 					{% endif %}
 					<td class="col-5">
 
-						<button class="btn btn-danger" title="Eliminar el T&eacute;cnico"
-							data-toggle="modal" data-target="#eliminar-minsal-modal" data-id="{{minsal.id}}"
+						<button class="btn btn-success" title="Editar Información del Laboratorista"
+							data-toggle="modal" data-target="#editar-minsal-modal"
+							data-id="{{minsal.idPaciente}}"
 							data-nombre="{{minsal.user.first_name}}"
 							data-apellido="{{minsal.user.last_name}}"
-							data-user="{{minsal.user.id}}"
+							data-usuario="{{minsal.user.username}}"
+							data-correo="{{minsal.user.email}}"
+							data-telefono="{{minsal.user.dui}}"
+							data-direccion="{{minsal.user.direccion}}"
 						>
-							Eliminar&nbsp;&nbsp;<i class="far fa-trash-alt"></i>
+						Editar&nbsp;&nbsp;<i class="fas fa-pen"></i>
 						</button>
 					</td>
 				</tr>
 				{% empty %}
 				<tr>
 					<td colspan="6">
-						<h4>Aún no registras supervisores MINSAL.</h4>
+						<h4>Aún no registras Pacientes.</h4>
 					</td>
 				</tr>
 				{% endfor %}
@@ -312,6 +316,100 @@
 </div>
 </div>
 
+<!-- Modal Editar Paciente -->
+<div class="modal fade" id="editar-minsal-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+
+	<div class="modal-content">
+	<form action="{% url 'registrar_paciente' %}" method="POST">
+
+		<div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLabel">Agregar nuevo paciente</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+		<div class="modal-body">
+			<div class="form-group row">
+				<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="nombre" name="nombre" placeholder="" required="">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="apellido" class="col-sm-2 col-form-label">Apellido</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="apellido" name="apellido" placeholder="" required="">
+				</div>
+			</div>
+			
+			<div class="form-group row">
+				<label for="dui" class="col-sm-2 col-form-label">DUI</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="dui" name="dui" placeholder="" required="">
+				</div>
+			</div>
+
+			<div class="form-group row">
+      			<label for="resultado" class="col-sm-2 col-form-label">Resultado: </label>
+      			<div class="col-sm-10">
+      				<select name="estado" id="estado" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+        			<option selected required="">Seleccione..</option>
+        			<option value="1">Positivo</option>
+        			<option value="0">Negativo</option>
+      				</select>
+      			</div>
+    		</div>
+
+    		<div class="form-group row">
+      			<label for="fecha_propuesta" class="col-sm-2 col-form-label" >Sexo: </label>
+      			<div class="col-sm-10">
+      				<select name="sexo" id="sexo" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+        			<option selected required="">Seleccione..</option>
+        			<option value="1">Masculino</option>
+        			<option value="0">Femenino</option>
+      				</select>
+      			</div>
+    		</div>
+    		<div class="form-group row">
+				<label for="fecha_propuesta" class="col-sm-2 col-form-label">Fecha de Nacimiento:</label>
+				<div class="col-sm-10">
+					<input type="date" class="form-control" id="fecha" name="fecha" placeholder="" required="">
+				</div>
+			</div>
+    		<div class="form-group row">
+      			<label for="correo" class="col-sm-2 col-form-label">Departamento:</label>
+      			<div class="col-sm-10">
+                    {{ form.departamento.label_tag }} 
+                    {{ form.departamento }}
+      			</div>
+    		</div>
+    		<div class="form-group row">
+      			<label for="correo" class="col-sm-2 col-form-label">Municipio:</label>
+      			<div class="col-sm-10">
+                    {{ form.municipio.label_tag }} 
+                    {{ form.municipio }}
+      			</div>
+    		</div>
+
+
+			<div class="form-group row justify-content-md-center">
+				
+			</div>
+		</div>
+		
+		<div class="modal-footer">
+			{% csrf_token %}
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			<button type="submit" class="btn btn-primary col-sm-4 col-form-label" id="Registrar">Registrar</button>
+		</div>
+
+	</form>
+	</div>
+
+</div>
+</div>
 
 <!-- Modal Eliminar laboratoristas -->
 <div class="modal fade" id="eliminar-minsal-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
