@@ -24,4 +24,5 @@ urlpatterns = [
 	path('editar-minsal/', views.editar_minsal, name='editar_minsal'),
 	path('gestion_paciente/', views.gestion_paciente, name='gestion_paciente'),
 	url(r'ajax/get_municipios', get_municipios, name='get_municipios'),
+	path('registrar-paciente/', views.registrar_paciente, name='registrar_paciente'),
 ]

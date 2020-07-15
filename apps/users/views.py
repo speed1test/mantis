@@ -6,6 +6,7 @@ from .models import User
 from django.core import mail
 from apps.covid.models import *
 from .forms import FormFiltrar
+from datetime import date, datetime
 
 departamentos = Departamento.objects.all()
 municipios = Municipio.objects.all()
@@ -182,4 +183,34 @@ def gestion_paciente(request):
 	contexto = {'pacientes': pacientes,'form':form,}
 	return render(request, 'gestion_usuarios/gestion_paciente.html', contexto)
 
+def registrar_paciente(request):
+	nombre_paciente = request.POST['nombre']
+	apellido_paciente = request.POST['apellido']
+	dui = request.POST['dui']
+	sexo = request.POST['sexo']
+	d = datetime.strptime(request.POST['fecha'], '%Y-%m-%d')
+	d.strftime('%Y-%m-%d')
 
+	localidad = Municipio.objects.get(idMunicipio=request.POST['municipio'])
+
+	paciente = Paciente()
+	paciente.localidad = localidad
+	paciente.nombre_paciente = nombre_paciente
+	paciente.apellido_paciente = apellido_paciente
+	paciente.dui_paciente = dui
+	paciente.sexo_paciente = sexo
+	paciente.fecha_paciente = d
+	paciente.save()
+
+	cuadro = CuadroMedico()
+	cuadro.paciente = paciente
+	cuadro.estado_paciente = request.POST['estado']
+	cuadro.save()
+
+	if request.user.is_authenticated:
+
+		return redirect('gestion_paciente')
+
+	else:
+		
+		return redirect('/')

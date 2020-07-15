@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'covidsv.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mysql_cymysql',
-        'NAME': 'pruebas_edwin',
+        'NAME': 'pruebas_exp',
         'USER': 'prueba',
          'PASSWORD': 'prueba',
         'HOST': 'propositocovid.duckdns.org',

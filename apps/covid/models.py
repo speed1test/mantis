@@ -23,13 +23,15 @@ class Municipio(models.Model):
 
 class Paciente(models.Model):
     idPaciente = models.AutoField(primary_key=True)
-    nombre_paciente = models.CharField(max_length=50, null = False, blank = False)
-    apellido_paciente = models.CharField(max_length=50, null = False, blank = False)
-    dui_paciente = models.CharField(max_length=9, null=False, blank = False)
+    nombre_paciente = models.CharField(max_length=50, null = True, blank = True)
+    apellido_paciente = models.CharField(max_length=50, null = True, blank = True)
+    dui_paciente = models.CharField(max_length=9, null=True, blank = True)
+    localidad = models.ForeignKey(Municipio, null = True, blank = True, on_delete=models.CASCADE)
     sexo_paciente = models.BooleanField()
     fecha_paciente = models.DateTimeField()
 class CuadroMedico(models.Model):
     idCuadroMedico = models.AutoField(primary_key=True) 
     paciente = models.OneToOneField(Paciente, null = True, blank = True, on_delete=models.CASCADE)
     estado_paciente = models.BooleanField()
-    descripcion_paciente = models.CharField(max_length=50)
+    descripcion_paciente = models.CharField(max_length=50, null = True, blank = True)
+
